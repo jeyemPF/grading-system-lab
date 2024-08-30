@@ -1,36 +1,22 @@
 import express from 'express';
-import dotenv from 'dotenv'
-import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+
 const app = express();
-dotenv.config()
+dotenv.config();
 
-const connect = async () =>{
+// Middleware (if any)
+app.use(express.json());
 
-    try {
-        await mongoose.connect(process.env.MONGO);
-        console.log("Connected to Mongo DB")
-    } catch (error) {
-       throw error
-    };
-
-};
-
-mongoose.connection.on("disconnected", () => {
-    console.log("MongoDB Disconnected")
-})
-
-mongoose.connection.on("connected", () => {
-    console.log("MongoDB connected")
-})
-
+// Test route
 app.get('/', (req, res) => {
-    res.send('Grading System!')
+    res.send('Grading System!');
 });
 
+// Start the server and connect to the database
+const PORT = process.env.PORT || 8800;
 
-
-
-app.listen(8800, ()=>{
-    connect()
-    console.log("Connected to the backend")
-})
+app.listen(PORT, () => {
+    connectDB();
+    console.log(`Server running on port ${PORT}`);
+});
